@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+<h:body>
+	<ui:composition template="/templates/mainTemplate.xhtml">
+		<ui:define name="title">Inicio - SCANOA</ui:define>
+		<ui:define name="content">
+			<h3>Bienvenido a la plafatorma #{nombre}!</h3>	
+								
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+			    <p:graphicImage name="img/ajaxloader.gif" />
+			</p:dialog>
+								
+		</ui:define>
+	</ui:composition>
+	
+</h:body>
+</html>

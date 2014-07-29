@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      
+<h:body>
+	<f:metadata>
+		<f:event listener="#{loginBean.isAdmin}" type="preRenderView" />
+	</f:metadata>
+	<ui:composition template="/templates/mainTemplate.xhtml">
+		<ui:define name="title">Gestión de Tópicos - SCANOA</ui:define>
+		<ui:define name="content">
+			<div id="contentTopics">
+				<h3>Gestión de Tópicos - Dominio Informático</h3>
+				<h:form id="formTopicos">
+					<p:growl id="msgs" showDetail="true" globalOnly="true"/>					
+					<div id="optionsTopic">
+						<p:commandButton value="Agregar tópico" icon="ui-icon-plus"
+		                	oncomplete="PF('addTopicDialog').show()"/>
+		                <p:commandButton value="Editar tópico" icon="ui-icon-wrench"
+		                	update=":editTopicForm" oncomplete="PF('editTopicDialog').show()"/>
+						<p:commandButton value="Eliminar tópico" icon="ui-icon-trash"
+		                	update=":deleteTopicForm" oncomplete="PF('deleteTopicDialog').show()"/>
+					</div>
+					
+					<div id="treetablePanel">
+						<p:treeTable id="treeTopicos" value="#{topicManagerBean.root}" var="topic"
+						selectionMode="single" selection="#{topicManagerBean.selectedNode}"
+						emptyMessage="No hay tópicos" >
+	
+							<p:column headerText="Tópico">
+								<h:outputText value="#{topic.label}" />
+							</p:column>
+							
+							<p:column headerText="N° de OAs categorizados" style="width:20px;">
+								<h:outputText value="#{topic.cantOAs}" />
+							</p:column>
+	
+						</p:treeTable>
+					</div>
+				</h:form>
+				
+				<h:form id="addTopicForm">
+					<p:dialog header="Agregar tópico" showEffect="fade" hideEffect="fade" widgetVar="addTopicDialog" modal="true" resizable="false">
+						<table>
+							<tr>
+								<td>Ingrese el identificador del tópico:#{topicManagerBean.selectedNode}</td>
+								<td>
+									<p:inputText id="addTopico" value="#{topicManagerBean.topicoTMB}" required="true" requiredMessage="Debe ingresar un identificador">
+										<f:validator validatorId="topicValidator" />
+										<p:watermark for="addTopico" value="Ej: nuevoTopico" />
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p:message for="addTopico" severity="error"></p:message>
+								</td>
+							</tr>
+							<tr>
+								<td>Ingrese el nombre del tópico:</td>
+								<td>
+									<p:inputText id="addLabel" value="#{topicManagerBean.labelTMB}" required="true" requiredMessage="Debe ingresar un nombre" >
+										<p:watermark for="addLabel" value="Ej: Nuevo tópico" />
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p:message for="addLabel" severity="error"></p:message>
+								</td>
+							</tr>
+						</table>
+						<f:facet name="footer">
+							<p:commandButton action="#{topicManagerBean.addTopic}" value="Agregar" 
+								update=":formTopicos,:addTopicForm" oncomplete="if(args.validationFailed) {addTopicDialog.show()}"
+								ajax="true" icon="ui-icon-plus">
+							</p:commandButton>
+						</f:facet>
+					</p:dialog>
+				</h:form>
+				
+				<h:form id="editTopicForm">
+					<p:outputPanel id="panelNotNull" layout="block" rendered="#{topicManagerBean.selectedNode != null}">
+						<p:dialog header="Editar tópico #{topicManagerBean.selectedNode}" showEffect="fade" hideEffect="fade" widgetVar="editTopicDialog" modal="true" resizable="false">
+							<table>
+								<tr>
+									<td>Ingrese el nuevo identificador del tópico:</td>
+									<td>
+										<p:inputText id="editTopico" value="#{topicManagerBean.topicoTMB}" required="true" 
+											requiredMessage="Debe ingresar un identificador">
+											<p:watermark for="editTopico" value="Ej: identificadorTopico" />
+										</p:inputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<p:message for="editTopico" severity="error"></p:message>
+									</td>
+								</tr>
+								<tr>
+									<td>Ingrese el nuevo nombre del tópico:</td>
+									<td>
+										<p:inputText id="editLabel" value="#{topicManagerBean.labelTMB}" required="true" 
+											requiredMessage="Debe ingresar un nombre">
+											<p:watermark for="editLabel" value="Ej: Nombre tópico" />
+										</p:inputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<p:message for="editLabel" severity="error"></p:message>
+									</td>
+								</tr>
+							</table>
+							<f:facet name="footer">
+								<p:commandButton action="#{topicManagerBean.editTopic}" value="Editar" 
+									update=":formTopicos,:editTopicForm" oncomplete="if(args.validationFailed) {editTopicDialog.show()}"
+									ajax="true" icon="ui-icon-wrench">
+								</p:commandButton>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+					<p:outputPanel id="panelNull" layout="block" rendered="#{topicManagerBean.selectedNode == null}">
+						<p:dialog header="Editar tópico" showEffect="fade" hideEffect="fade" widgetVar="editTopicDialog" modal="true" resizable="false">
+							<p style="width:300px; text-align:center;">Debe seleccionar un tópico para editar</p>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('editTopicDialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+				</h:form>
+				
+				<h:form id="deleteTopicForm">
+					<p:outputPanel id="panelNotNull" layout="block" rendered="#{topicManagerBean.selectedNode != null}">
+						<p:dialog header="Eliminar tópico" showEffect="fade" hideEffect="fade" widgetVar="deleteTopicDialog" modal="true" resizable="false">
+							<p style="width:600px; text-align:center;">Si elimina un tópico, se eliminarán sus subtópicos y los objetos de aprendizajes categorizadas en ellas.</p>
+							<br/>
+							<p style="margin:0 auto; width:400px; text-align:center;">¿Esta seguro de eliminar el tópico "#{topicManagerBean.selectedNode}"?</p>
+							<f:facet name="footer">
+								<p:commandButton action="#{topicManagerBean.deleteTopic}" value="Si" 
+									update=":formTopicos,:deleteTopicForm" ajax="true" icon="ui-icon-check"/>
+								<p:commandButton value="No" onclick="PF('deleteTopicDialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+					<p:outputPanel id="panelNull" layout="block" rendered="#{topicManagerBean.selectedNode == null}">
+						<p:dialog header="Eliminar tópico" showEffect="fade" hideEffect="fade" widgetVar="deleteTopicDialog" modal="true" resizable="false">
+							<p style="width:300px; text-align:center;">Debe seleccionar un tópico para eliminar</p>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('deleteTopicDialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+				</h:form>
+							
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

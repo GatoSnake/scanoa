@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet library="css" name="mainTemplate.css"/>
+	<link href="#{resource['resources:img/favicon.ico']}" rel="shortcut icon" type="image/x-icon" />
+<!-- 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /> -->
+	<title><ui:insert name="title">Default title</ui:insert></title>
+</h:head>
+<h:body>
+	<div class="wrapper">
+		<p:outputPanel id="HeaderContent" layout="block">
+			<div id="header" >
+				<ui:include src="header/mainHeader.xhtml"></ui:include>
+			</div>
+				
+			<div id="menu">
+				<h:panelGroup layout="block" rendered="#{tipo == 1}">
+					<ui:include src="menus/menuAdmin.xhtml"></ui:include>
+				</h:panelGroup>
+				<h:panelGroup layout="block" rendered="#{tipo == 2}">
+					<ui:include src="menus/menuUser.xhtml"></ui:include>
+				</h:panelGroup>
+			</div>
+					
+			<div id="content">
+				<ui:insert name="content"></ui:insert>
+			</div>
+			
+			<div class="push"></div>
+		</p:outputPanel>
+	</div>
+	<div id="footer">
+		<ui:include src="footer.xhtml"></ui:include>
+	</div>
+</h:body>
+
+
+
+</html>
+
+

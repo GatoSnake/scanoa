@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+	<div id="menuFormAdmin">
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Inicio" url="home.xhtml" icon="ui-icon-home"/>
+		        <p:submenu label="Sistema de Gestión" icon="ui-icon-document">
+		            <p:menuitem value="Gestión de usuarios" url="accountManager.xhtml" />
+		            <p:separator />
+		            <p:menuitem value="Gestión de tópicos" url="topicsManager.xhtml" />
+		            <p:separator />
+		            <p:menuitem value="Gestión de objetos de aprendizaje" url="oaManager.xhtml" />
+		        </p:submenu>
+		        <p:submenu label="Objetos de aprendizajes" icon="ui-icon-document">
+		            <p:menuitem value="Mis OAs" url="oaAccount.xhtml" />
+		            <p:separator />
+		            <p:menuitem value="Buscar OAs" url="searchOAs.xhtml" />
+		        </p:submenu>
+		        <p:submenu label="Mi cuenta" icon="ui-icon-person">
+		        	<p:menuitem value="Configuración de cuenta" url="editAccount.xhtml"/>
+		            <p:separator />
+		            <p:menuitem value="Ver mi perfil" url="profile.xhtml"/>
+		        </p:submenu>
+		        <p:menuitem value="Sistema de recategorización" url="recategorizationOAs.xhtml" icon="ui-icon-gear"/>
+	        </p:menubar>
+		</h:form>
+	</div>
+</h:body>
+</html>

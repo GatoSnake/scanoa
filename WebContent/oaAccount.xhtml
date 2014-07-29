@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+      
+<h:body>
+	<ui:composition template="/templates/mainTemplate.xhtml">
+		<ui:define name="title">Mis Objetos de Aprendizajes - SCANOA</ui:define>
+		<ui:define name="content">
+			<div id="contentOAs">
+				<h3>Mis Objetos de Aprendizaje</h3>
+				<h:form id="formOAs">
+					<p:growl id="msgs" showDetail="true" globalOnly="true"/>
+					<div id="optionsOA">
+						<p:commandButton value="Ver OA" icon="ui-icon-document"
+			            	update=":detailOAForm" oncomplete="PF('detailOADialog').show()"/>
+						<p:commandButton value="Agregar OA" icon="ui-icon-plus"
+			            	oncomplete="PF('addOADialog').show()"/>
+			         	<p:commandButton value="Editar OA" icon="ui-icon-wrench"
+			              	update=":editOAForm" oncomplete="PF('editOADialog').show()"/>
+						<p:commandButton value="Eliminar OA" icon="ui-icon-trash"
+			        		update=":deleteOAForm" oncomplete="PF('deleteOADialog').show()"/>
+					</div>
+					
+					<div id="datatablePanel">
+						<p:dataTable id="tableOAs" var="oa" value="#{oaAccountBean.oas}" 
+							emptyMessage="No ha ingresado objetos de aprendizaje"
+							selectionMode="single" selection="#{oaAccountBean.selectedOA}"
+							rowKey="#{oa.id}" rows="10" paginator="true"
+                         	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						    
+						    <p:column filterBy="#{oa.titulo}" filterMatchMode="contains" headerText="Título">
+						        <h:outputText value="#{oa.titulo}" />
+						    </p:column>
+						    					    
+						</p:dataTable>
+					</div>	
+				</h:form>
+				
+				<h:form id="detailOAForm" >
+					<p:outputPanel id="panelNotNull" layout="block" rendered="#{oaAccountBean.selectedOA != null}">
+						<p:dialog header="Ver detalles del objeto de aprendizaje" widgetVar="detailOADialog"
+						showEffect="fade" hideEffect="fade"  modal="true" resizable="false">
+							<div id="tableDetailOA">
+								<table>
+					 				<tr>
+					                	<td class="column1"><h:outputText value="Título:" /></td>
+					                	<td class="column2"><h:outputText value="#{oaAccountBean.selectedOA.titulo}" /></td>
+					 				</tr>
+					 				<tr>
+					                	<td><h:outputText value="Descripción:" /></td>
+					                	<td><h:outputText value="#{oaAccountBean.selectedOA.descripcion}"/></td>
+					 				</tr>
+					 				<tr>
+					                	<td><h:outputText value="Fecha de ingreso:" /></td>
+					                	<td><h:outputText value="#{oaAccountBean.selectedOA.fecha_ingreso}" /></td>
+					                </tr>
+					                <tr>
+					                	<td><h:outputText value="Categorizado en (Relevancia descendiente):" /></td>
+					                	<td>
+					                		<ul>
+						                		<ui:repeat var="topic" value="#{oaAccountBean.selectedOA.rankTopicos}">
+						                			<li><h:outputText value="#{topic.label}" /></li>
+						                		</ui:repeat>
+					                		</ul>
+					                	</td>
+					                </tr>
+					                <tr>
+					                	<td><h:outputText value="URL:" /></td>
+					                	<td>
+				                			<h:outputLink target="_blank" value="#{oaAccountBean.selectedOA.url}">#{oaAccountBean.selectedOA.url}</h:outputLink>
+					                	</td>
+					                </tr>
+					        	</table>
+					        </div>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('detailOADialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+					<p:outputPanel id="panelNull" layout="block" rendered="#{oaAccountBean.selectedOA == null}">
+						<p:dialog header="Ver detalles del objeto de aprendizaje" widgetVar="detailOADialog"
+						showEffect="fade" hideEffect="fade"  modal="true" resizable="false">
+							<p style="width:300px; text-align:center;">Debe seleccionar un objeto de aprendizaje para visualizar</p>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('detailOADialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+				</h:form>
+								
+				<h:form id="addOAForm">
+					<p:dialog header="Agregar OA" showEffect="fade" hideEffect="fade" widgetVar="addOADialog" modal="true" resizable="false">
+						<table>
+							<tr>
+								<td colspan="2"><p>Actualmente se procesan documentos PDF, DOC y DOCX</p></td>
+							</tr>
+							<tr>
+								<td>Ingrese la URL:</td>
+								<td>
+									<p:inputText id="addURL" value="#{oaAccountBean.urlOAMB}" required="true" 
+										requiredMessage="Debe ingresar una URL">
+										<f:validator validatorId="inputValidator" />
+										<f:validator validatorId="urlValidator" />
+										<p:watermark for="addURL" value="Ej: http://www. ..." />
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p:message for="addURL" severity="error"></p:message>
+								</td>
+							</tr>
+							<tr>
+								<td>Ingrese el título:</td>
+								<td>
+									<p:inputText id="addTitulo" value="#{oaAccountBean.tituloOAMB}" required="true" 
+										requiredMessage="Debe ingresar un título" validatorMessage="El titulo debe ser minimo de 5 caracteres">
+										<f:validator validatorId="inputValidator" />
+										<p:watermark for="addTitulo" value="Ej: Título OA" />
+										<f:validateLength minimum="5"/>
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p:message for="addTitulo" severity="error"></p:message>
+								</td>
+							</tr>
+							<tr>
+								<td>Ingrese alguna descripción:</td>
+								<td>
+									<p:inputText id="addDescripcion" value="#{oaAccountBean.descripcionOAMB}" >
+										<f:validator validatorId="inputValidator" />
+										<p:watermark for="addDescripcion" value="Ej: Descripción" />
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p:message for="addDescripcion" severity="error"></p:message>
+								</td>
+							</tr>	
+							<f:facet name="footer">
+								<p:commandButton action="#{oaAccountBean.addOA}" value="Agregar" 
+									update=":formOAs,:addOAForm" oncomplete="if(args.validationFailed) {addOADialog.show()}"
+									ajax="true" icon="ui-icon-plus">
+								</p:commandButton>
+							</f:facet>
+						</table>
+					</p:dialog>
+				</h:form>
+				
+				<h:form id="editOAForm" >
+					<p:outputPanel id="panelNotNull" layout="block" rendered="#{oaAccountBean.selectedOA != null}">
+						<p:dialog header="Editar OA ''#{oaAccountBean.selectedOA.titulo}''" widgetVar="editOADialog"
+							showEffect="fade" hideEffect="fade"  modal="true" resizable="false">
+							<table>
+								<tr>
+									<td>Ingrese la URL:</td>
+									<td>
+										<p:inputText id="editURL" value="#{oaAccountBean.urlOAMB}" >
+											<f:validator validatorId="inputValidator" />
+											<f:validator validatorId="urlValidator" />
+											<p:watermark for="editURL" value="Ej: http://www. ..." />
+										</p:inputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<p:message for="editURL" severity="error"></p:message>
+									</td>
+								</tr>
+								<tr>
+									<td>Ingrese el título:</td>
+									<td>
+										<p:inputText id="editTitulo" value="#{oaAccountBean.tituloOAMB}" validatorMessage="El titulo debe ser minimo de 5 caracteres">
+											<f:validator validatorId="inputValidator" />
+											<f:validateLength minimum="5"/>
+											<p:watermark for="editTitulo" value="Ej: Título OA" />
+										</p:inputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<p:message for="editTitulo" severity="error"></p:message>
+									</td>
+								</tr>
+								<tr>
+									<td>Ingrese alguna descripción:</td>
+									<td>
+										<p:inputText id="editDescripcion" value="#{oaAccountBean.descripcionOAMB}" >
+											<f:validator validatorId="inputValidator" />
+											<p:watermark for="editDescripcion" value="Ej: Descripción" />
+										</p:inputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<p:message for="editDescripcion" severity="error"></p:message>
+									</td>
+								</tr>	
+								<f:facet name="footer">
+									<p:commandButton action="#{oaAccountBean.editOA}" value="Editar" 
+										update=":formOAs,:editOAForm" oncomplete="if(args.validationFailed) {editOADialog.show()}"
+										ajax="true" icon="ui-icon-wrench">
+									</p:commandButton>
+								</f:facet>
+							</table>	
+						</p:dialog>
+					</p:outputPanel>
+					<p:outputPanel id="panelNull" layout="block" rendered="#{oaAccountBean.selectedOA == null}">
+						<p:dialog header="Editar OA" widgetVar="editOADialog"
+							showEffect="fade" hideEffect="fade"  modal="true" resizable="false">
+							<p style="width:300px; text-align:center;">Debe seleccionar un objeto de aprendizaje para editar</p>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('editOADialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+				</h:form>
+			
+				<h:form id="deleteOAForm">
+					<p:outputPanel id="panelNotNull" layout="block" rendered="#{oaAccountBean.selectedOA != null}">
+						<p:dialog header="Eliminar OA" showEffect="fade" hideEffect="fade" widgetVar="deleteOADialog" modal="true" resizable="false">
+							<p style="width:400px; text-align:center;">¿Esta seguro de eliminar el objeto de aprendizaje "#{oaAccountBean.selectedOA.titulo}"?</p>
+							<f:facet name="footer">
+								<p:commandButton action="#{oaAccountBean.deleteOA}" value="Si" 
+									update=":formOAs,:deleteOAForm" ajax="true" icon="ui-icon-check"/>
+								<p:commandButton value="No" onclick="PF('deleteOADialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+					<p:outputPanel id="panelNull" layout="block" rendered="#{oaAccountBean.selectedOA == null}">
+						<p:dialog header="Eliminar OA" showEffect="fade" hideEffect="fade" widgetVar="deleteOADialog" modal="true" resizable="false">
+							<p style="width:300px; text-align:center;">Debe seleccionar un objeto de aprendizaje para eliminar</p>
+							<f:facet name="footer">
+								<p:commandButton value="Cerrar" onclick="PF('deleteOADialog').hide();" ajax="true" icon="ui-icon-closethick"/>
+							</f:facet>
+						</p:dialog>
+					</p:outputPanel>
+				</h:form>
+	
+				<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				    <p:graphicImage name="img/ajaxloader.gif" />
+				</p:dialog>
+			</div>	
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

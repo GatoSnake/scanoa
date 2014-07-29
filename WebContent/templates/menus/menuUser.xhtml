@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<div id="menuFormUser">
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Inicio" url="home.xhtml" />
+		        <p:submenu label="Objetos de aprendizajes" icon="ui-icon-document">
+		            <p:menuitem value="Mis OAs" url="oaAccount.xhtml" />
+		            <p:separator />
+		            <p:menuitem value="Buscar OAs" url="searchOAs.xhtml" />
+		        </p:submenu>
+		        <p:submenu label="Mi cuenta" icon="ui-icon-gear">
+		        	<p:menuitem value="Configuración de cuenta" url="editAccount.xhtml" />
+		            <p:separator />
+		            <p:menuitem value="Ver mi perfil" url="profile.xhtml" />
+		        </p:submenu>
+	        </p:menubar>
+		</h:form>
+	</div>
+</h:body>
+</html>

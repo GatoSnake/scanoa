@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+      
+<h:body>
+	<ui:composition template="/templates/mainTemplate.xhtml">
+		<ui:define name="title">Configuración de cuenta - SCANOA</ui:define>
+		<ui:define name="content">
+			<h3>Configuración de cuenta</h3>
+			<div id="formEdit">
+				<h:form id="editAccountForm">
+					<p:fieldset legend="Editar cuenta" toggleable="true" collapsed="false" toggleSpeed="500">
+						<p:ajax event="toggle"/>
+						<p:growl for="growlEditAccount" showDetail="true" life="5000" severity="info,warn"/>
+					    <h:panelGrid id="editAccountPanel" columns="2"> 
+							<h:outputText value="Ingrese su correo:" /> 
+							<p:inputText id="correo" value="#{userBean.correo}">
+								<p:watermark for="correo" value="#{correo}" />
+								<f:validator validatorId="correoValidator" />
+							</p:inputText>
+							<p:spacer></p:spacer>						
+							<p:message for="correo" severity="error"></p:message>
+							
+							<h:outputText value="Ingrese su nombre:" /> 
+							<p:inputText id="nombre" value="#{userBean.nombre}" >
+								<p:watermark for="nombre" value="#{nombre}" />
+							</p:inputText>
+							<p:spacer></p:spacer>
+							<p:message for="nombre" severity="error"></p:message>
+							
+							<h:outputText value="Ingrese su contraseña:" />
+							<p:password id="contraseña" value="#{userBean.contraseña}" feedback="false" 
+								match="confContraseña"
+								validatorMessage="Las contraseñas no coinciden."
+								required="true" requiredMessage="Debe ingresar su contraseña."/>
+	 						<p:spacer></p:spacer>
+	 						<p:message for="contraseña" severity="error"></p:message>
+	 
+							<h:outputText value="Confirme su contraseña:" />
+							<p:password id="confContraseña" value="#{userBean.contraseña}" feedback="false" 
+								required="true" requiredMessage="Debe confirmar su contraseña."/>
+							<p:spacer></p:spacer>
+							<p:message for="confContraseña" severity="error"></p:message>
+								
+							<p:spacer></p:spacer>						
+							<p:commandButton action="#{editAccountBean.editAccount}" value="Editar" update=":HeaderContent" ajax="true"></p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+				</h:form>
+				
+				<h:form id="editContForm">
+					<p:fieldset legend="Cambiar contraseña" toggleable="true" collapsed="true" toggleSpeed="500">
+						<p:ajax event="toggle"/>
+						<p:growl for="growlEditCont" showDetail="true" life="5000" severity="info,warn"/>
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputText value="Ingrese su contraseña:" />
+							<p:password id="contraseñaAntigua" value="#{userBean.contraseña}" feedback="false" required="true" requiredMessage="Debe ingresar una contraseña."></p:password>
+							<p:spacer></p:spacer>
+							<p:message for="contraseñaAntigua" severity="error"></p:message>
+							
+							<h:outputText value="Ingrese su nueva contraseña:" />
+						    <p:password id="nuevaContraseña" value="#{editAccountBean.nuevaContraseña}" feedback="false" 
+								match="confNuevaContraseña"
+								validatorMessage="Las contraseñas no coinciden."
+								required="true" requiredMessage="Debe ingresar su nueva contraseña."/>
+						    <p:spacer></p:spacer>
+						    <p:message for="nuevaContraseña" severity="error"></p:message>
+						            
+						    <h:outputText value="Confirme su nueva contraseña:" />
+						    <p:password id="confNuevaContraseña" value="#{editAccountBean.nuevaContraseña}" feedback="false" 
+								required="true" requiredMessage="Debe confirmar su nueva contraseña."/>
+						    <p:spacer></p:spacer>
+						    <p:message for="confNuevaContraseña" severity="error"></p:message>
+						           
+						    <p:spacer></p:spacer>
+						    <p:commandButton action="#{editAccountBean.editContraseñaAccount}" value="Editar contraseña" update="editContForm" ajax="true"></p:commandButton>
+						</h:panelGrid>
+					</p:fieldset>
+				</h:form>
+								
+				<h:form id="deleteAccountForm">
+					<p:fieldset legend="Eliminar cuenta" toggleable="true" collapsed="true" toggleSpeed="500">
+						<p:ajax event="toggle"/>
+						<p:growl for="growlDelete" showDetail="true" life="5000" severity="info,warn"/>
+						<p>Advertencia: Eliminar su cuenta implica que se eliminarán sus datos personales y no podrá entrar al sistema con su cuenta.</p>
+						<p:spacer></p:spacer>
+					
+						<h:panelGrid columns="1" cellpadding="5">						 
+						    <p:commandButton value="Eliminar cuenta" type="button" onclick="PF('confirmation').show();" /> 
+						</h:panelGrid>
+						
+						<p:dialog header="Confirmación" modal="true" widgetVar="confirmation" showEffect="fade" hideEffect="explode" height="100">
+						    <h:panelGrid columns="1">
+							    <h:outputText value="¿Esta seguro de eliminar su cuenta?" />
+								<f:facet name="footer" styleClass="mymenu">  
+								    <p:commandButton action="#{deleteAccountBean.deleteAccount}" value="Si" update="deleteAccountForm" ajax="true"></p:commandButton>
+								    <p:commandButton value="No" onclick="PF('confirmation').hide();" ajax="true"></p:commandButton>
+								</f:facet>
+							</h:panelGrid>
+						</p:dialog>
+					
+					</p:fieldset>
+				</h:form>
+			</div>
+			<br/>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
