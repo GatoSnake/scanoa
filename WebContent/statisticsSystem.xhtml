@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<f:metadata>
+		<f:event listener="#{indexBean.isAdmin}" type="preRenderView" />
+	</f:metadata>
+
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Estadísticas del sistema en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-12 col-lg-12">
+						<h2 class="content-title">Estadísticas del sistema <br/> <small>Sección de Administración</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Estadísticas del sistema <br/> <small>Sección de Administración</small></h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="well col-xs-12 col-sm-8 col-sm-offset-2">
+						<p><strong>N° de cuentas registradas: </strong>#{statisticsBean.cantUsers}</p>
+						<p><strong>N° de tópicos agregados: </strong>#{statisticsBean.cantTopics}</p>
+						<p><strong>N° de OAs ingresados: </strong>#{statisticsBean.cantOAs}</p>
+						<p><strong>N° de OAs categorizados: </strong>#{statisticsBean.cantOAsCat}</p>
+						<p><strong>N° de OAs no categorizados: </strong>#{statisticsBean.cantOAsNoCat}</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- ACA VAN LOS MODAL Y SUS RESPECTIVOS FORMULARIOS -->
+
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				// ACA VAN LOS VALIDADORES
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<f:metadata>
+		<f:event listener="#{indexBean.isAdmin}" type="preRenderView" />
+	</f:metadata>
+
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Gestión de cuentas en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-5 col-lg-4">
+						<h2 class="content-title">Gestión de cuentas <br/> <small>Sección de Administración</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Gestión de cuentas <br/> <small>Sección de Administración</small></h3>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+						<h:panelGroup id="mensaje">
+							<h:panelGroup rendered="#{accountManagerBean.estadoExito==1}">
+								<div class="alert alert-success" role="alert">
+									<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[0]}">
+										<p class="text-center">Se ha creado satisfactoriamente la cuenta.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[1]}">
+										<p class="text-center">Se ha actualizado el correo electrónico satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[2]}">
+										<p class="text-center">Se ha actualizado el nombre satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[3]}">
+										<p class="text-center">Se ha actualizado la contraseña satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[4]}">
+										<p class="text-center">Se ha actualizado el tipo de cuenta satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{accountManagerBean.mensajesExito[5]}">
+										<p class="text-center">Se ha eliminado satisfactoriamente la cuenta.</p>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{accountManagerBean.estadoError==1}">
+								<div class="alert alert-danger" role="alert">
+									<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+									<p>Se han producido los siguientes errores:</p>
+									<li>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[0]}">
+											<ul>El correo ingresado ya está vinculado a otra cuenta</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[1]}">
+											<ul>Error en el proceso de guardado del correo electrónico</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[2]}">
+											<ul>Error en el proceso de guardado del nombre</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[3]}">
+											<ul>Error en el proceso de guardado de la contraseña</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[4]}">
+											<ul>Error en el proceso del cambio de tipo de cuenta</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{accountManagerBean.mensajesError[5]}">
+											<ul>Error en el proceso de eliminar la cuenta en la base de datos</ul>
+										</h:panelGroup>
+									</li>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h:form id="tableUsersForm" class="form-horizontal">
+							<p:dataTable id="tableUsers" selectionMode="single" selection="#{accountManagerBean.selectedUser}" var="user" value="#{accountManagerBean.users}" rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" filteredValue="#{accountManagerBean.filteredUsers}" emptyMessage="No se han encontrado usuarios" widgetVar="usersTable" rowKey="#{user.correo}">
+								<f:facet name="header">
+						            <p:outputPanel>
+						            	<div class="row">
+						            		<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+								                <label for="globalFilter" class="col-sm-5 control-label">Buscar cuenta</label>
+								                <div class="col-sm-7">
+								               		<p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" class="form-control" placeholder="Ingrese para buscar una cuenta"/>
+								               	</div>
+						            		</div>
+						            		<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+						            			<div class="spacer"/>
+						            		</div>
+						            		<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+								                <div data-toggle="modal" data-target="#modalCrear" class="modal-trigger2 pull-right">
+									                <h:commandButton value="Crear cuenta" class="btn btn-primary btn-xs button-tablePrim2" action="#{accountManagerBean.setValuesAdd}">
+											    		<f:ajax render=":crearForm" onevent="validatorAdd"/>
+											    	</h:commandButton>
+											    </div>
+						            		</div>
+						            	</div>
+						            	<div class="row">
+						            		<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+						            			<div class="spacer"/>
+						            		</div>
+						            		<div class="col-xs-4 text-center">
+											    <h:commandButton value="Ver" class="btn btn-success btn-xs button-tablePrim headerOption-datatable" onclick="openModalVer();" disabled="#{accountManagerBean.buttonDisable}">
+										    		<f:ajax render=":verForm"/>
+										    	</h:commandButton>
+						            		</div>
+						            		<div class="col-xs-4 text-center">
+												<h:commandButton value="Editar" class="btn btn-warning btn-xs button-tablePrim headerOption-datatable" action="#{accountManagerBean.setValuesEdit}" onclick="openModalEditar();" disabled="#{accountManagerBean.buttonDisable}">
+										    		<f:ajax render=":editarForm" onevent="validatorEdit"/>
+										    	</h:commandButton>
+										    </div>
+										    <div class="col-xs-4 text-center">
+										    	<h:commandButton value="Eliminar" class="btn btn-danger btn-xs button-tablePrim headerOption-datatable" onclick="openModalEliminar();" disabled="#{accountManagerBean.buttonDisable}">
+										    		<f:ajax render=":eliminarForm"/>
+										    	</h:commandButton>
+										    </div>
+						            	</div>
+						            </p:outputPanel>
+						        </f:facet>
+					        	<p:ajax event="rowSelect" listener="#{accountManagerBean.onRowSelect}" update=":tableUsersForm"/>
+							    <p:column headerText="Id" sortBy="#{user.id}" filterBy="#{user.id}" filterMatchMode="contains" filterStyle="display:none" style="width:52px">
+									<h:outputText value="#{user.id}" />
+							    </p:column>
+							 
+							    <p:column headerText="Correo electrónico" sortBy="#{user.correo}" filterBy="#{user.correo}" filterMatchMode="contains" filterStyle="display:none">
+							        <h:outputText value="#{user.correo}" />
+							    </p:column>
+							 
+							    <p:column headerText="Tipo" sortBy="#{user.tipo}" styleClass="columnTipo-datatable">
+							    	<h:outputText rendered="#{user.tipo==1}" value="Administrador"/>
+									<h:outputText rendered="#{user.tipo==2}" value="Miembro"/>
+							    </p:column>
+
+							    <p:column styleClass="columnOption-datatable">
+							    	<div data-toggle="modal" data-target="#modalVer" class="modal-trigger tag-center">
+								    	<h:commandButton value="Ver" class="btn btn-success btn-xs button-tablePrim">
+								    		<f:ajax render=":verForm"/>
+								    		<f:setPropertyActionListener value="#{user}" target="#{accountManagerBean.selectedUser}" />
+								    	</h:commandButton>
+							    	</div>
+							    </p:column>
+
+							    <p:column styleClass="columnOption-datatable">
+							    	<div data-toggle="modal" data-target="#modalEditar" class="modal-trigger tag-center">
+								    	<h:commandButton value="Editar" class="btn btn-warning btn-xs button-tablePrim" action="#{accountManagerBean.setValuesEdit}">
+								    		<f:ajax render=":editarForm" onevent="validatorEdit"/>
+								    		<f:setPropertyActionListener value="#{user}" target="#{accountManagerBean.selectedUser}" />
+								    	</h:commandButton>
+							    	</div>
+							    </p:column>
+
+							    <p:column styleClass="columnOption-datatable">
+							    	<div data-toggle="modal" data-target="#modalEliminar" class="modal-trigger tag-center">
+								    	<h:commandButton value="Eliminar" class="btn btn-danger btn-xs button-tablePrim">
+								    		<f:ajax render=":eliminarForm"/>
+								    		<f:setPropertyActionListener value="#{user}" target="#{accountManagerBean.selectedUser}" />
+								    	</h:commandButton>
+							    	</div>
+							    </p:column>
+							</p:dataTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Crear cuenta</h4>
+      					</div>
+      					<h:form class="form-horizontal" id="crearForm" role="form">
+	      					<div class="modal-body">
+	      						<div class="form-group">
+									<label for="addNombre" class="col-sm-3 control-label">Nombre</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="addNombre" value="#{accountManagerBean.nombreAMB}" pt:placeholder="Ingrese un nombre">
+											<f:ajax event="keyup" render="text" onevent="validateAddForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="addCorreo" class="col-sm-3 control-label">Correo electrónico</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="addCorreo" value="#{accountManagerBean.correoAMB}" pt:placeholder="Ingrese un correo electrónico">
+											<f:ajax event="keyup" render="text" onevent="validateAddForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="addContraseña" class="col-sm-3 control-label">Contraseña</label>
+								    <div class="col-sm-9">
+										<h:inputSecret class="form-control" id="addContraseña" value="#{accountManagerBean.contraseñaAMB}" pt:placeholder="Ingrese una contraseña" redisplay="true">
+											<f:ajax event="keyup" render="text" onevent="validateAddForm"/>
+										</h:inputSecret>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="addTipo" class="col-sm-3 control-label">Tipo de cuenta</label>
+									<div class="col-sm-9">
+										<h:selectOneRadio id="addTipo" value="#{accountManagerBean.tipoAMB}">
+											<f:selectItem itemLabel="Administrador" itemValue="1" />
+											<f:selectItem itemLabel="Miembro" itemValue="2" />
+											<f:ajax event="click" onevent="validateAddForm"/>
+										</h:selectOneRadio>
+									</div>
+								</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-primary" action="#{accountManagerBean.addUser}" value="Crear cuenta" onclick="showLoading();">
+		        					<f:ajax execute="@form" event="action" render=":tableUsersForm :mensaje crearForm" onevent="closeModalCrear"/>
+		        				</h:commandButton>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalVer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Detalles de la cuenta</h4>
+      					</div>
+      					<h:form id="verForm" role="form">
+		      				<div class="modal-body">
+	      						<div class="row">
+	      							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 padding-zero">
+	      								<p class="text-center avatar-circle2 pull-right">
+                                            <h:graphicImage value="#{accountManagerBean.selectedUser.path_img}" height="120" width="120" class="img-responsive img-circle" alt="avatar" data-toggle="tooltip" data-placement="left" title="#{accountManagerBean.selectedUser.nombre}"/>
+                                        </p>
+	      							</div>
+	      							<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+	      								<h4 class="text-center"><strong>#{accountManagerBean.selectedUser.nombre}</strong></h4>
+	      								<p><strong>Correo electrónico: </strong>#{accountManagerBean.selectedUser.correo}</p>
+	      								<p><strong>Tipo de cuenta: </strong><h:outputText rendered="#{accountManagerBean.selectedUser.tipo==1}" value="Administrador"/><h:outputText rendered="#{accountManagerBean.selectedUser.tipo==2}" value="Miembro"/></p>
+	      								<p><strong>Fecha de registro: </strong>#{accountManagerBean.selectedUser.fecha_registro}</p>
+	      							</div>
+	      						</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Editar cuenta</h4>
+      					</div>
+      					<h:form class="form-horizontal" id="editarForm" role="form">
+	      					<div class="modal-body">
+	      						<div class="form-group">
+									<label for="editNombre" class="col-sm-3 control-label">Nombre</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="editNombre" value="#{accountManagerBean.nombreAMB}" pt:placeholder="Ingrese un nombre">
+										 	<f:ajax event="keyup" render="text" onevent="validateEditForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="editCorreo" class="col-sm-3 control-label">Correo electrónico</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="editCorreo" value="#{accountManagerBean.correoAMB}" pt:placeholder="Ingrese un correo electrónico">
+											<f:ajax event="keyup" render="text" onevent="validateEditForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="editContraseña" class="col-sm-3 control-label">Contraseña</label>
+								    <div class="col-sm-9">
+										<h:inputSecret class="form-control" id="editContraseña" value="#{accountManagerBean.contraseñaAMB}" pt:placeholder="Ingrese una contraseña" redisplay="true">
+											<f:ajax event="keyup" render="text" onevent="validateEditForm"/>
+										</h:inputSecret>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="editTipo" class="col-sm-3 control-label">Tipo de cuenta</label>
+									<div class="col-sm-9">
+										<h:selectOneRadio id="editTipo" value="#{accountManagerBean.tipoAMB}">
+											<f:selectItem itemLabel="Administrador" itemValue="1" />
+											<f:selectItem itemLabel="Miembro" itemValue="2" />
+											<f:ajax event="click" onevent="validateEditForm"/>
+										</h:selectOneRadio>
+									</div>
+								</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-primary" action="#{accountManagerBean.editUser}" value="Guardar cambios" onclick="showLoading();">
+									<f:ajax execute="@form" event="action" render=":tableUsersForm :mensaje editarForm" onevent="closeModalEditar"/>
+		        				</h:commandButton>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Eliminar cuenta</h4>
+      					</div>
+      					<h:form id="eliminarForm" role="form"> 					
+	      					<div class="modal-body">
+	      						<div class="row">
+		      						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		      							<div class="alert alert-warning" role="alert">
+		      								<p class="text-center"><strong>Advertencia:</strong> Eliminar esta cuenta implica que <strong>se eliminarán todos los datos personales vinculados a ella</strong>.</p>
+											<p class="text-center">¿Está seguro de eliminar la cuenta con el correo electrónico <strong>#{accountManagerBean.selectedUser.correo}</strong>?</p>
+		      							</div>
+		      						</div>
+	      						</div>
+		      				</div>	      				
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-danger" action="#{accountManagerBean.deleteUser}" value="Si, estoy seguro" onclick="showLoading();">
+		        					<f:ajax execute="@form" event="action" render=":tableUsersForm :mensaje eliminarForm" onevent="closeModalEliminar"/>
+		        				</h:commandButton>
+		      				</div>
+	      				</h:form>
+    				</div>
+  				</div>
+			</div>
+
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				function validatorAdd(data){
+					console.log("validatorAdd");
+					$('#crearForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'crearForm:addNombre': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        max: 30,
+				                        message: 'El nombre debe ser mínimo de 5 carácteres y máximo de 30 carácteres'
+				                    }
+				            	}
+				            },
+				            'crearForm:addCorreo': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				            	}
+				            },
+				            'crearForm:addContraseña': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            },
+				            'crearForm:addTipo': {
+				                validators: {
+				                    notEmpty: {
+			                            message: 'El tipo de cuenta es requerido'
+			                        }
+				                }
+				            }
+				        }
+					})/*.find('input[name="crearForm:addTipo"]').iCheck({
+                		checkboxClass: 'icheckbox_square-blue',
+                		radioClass: 'iradio_square-blue'
+            		}).on('ifChanged', function(e) {
+                		var field = $(this).attr('name');
+                		$('#crearForm').bootstrapValidator('revalidateField', field);
+           			});*/
+				};
+				function validatorEdit(data){
+					console.log("validatorEdit");
+					$('#editarForm').bootstrapValidator({
+						excluded: [':hidden', ':not(:visible)'],
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'editarForm:editNombre': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        max: 30,
+				                        message: 'El nombre debe ser mínimo de 5 carácteres y máximo de 30 carácteres'
+				                    }
+				            	}
+				            },
+				            'editarForm:editCorreo': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				            	}
+				            },
+				            'editarForm:editContraseña': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            },
+				            'editarForm:editTipo': {
+				                validators: {
+				                    notEmpty: {
+			                            message: 'El tipo de cuenta es requerido'
+			                        }
+				                }
+				            }
+				        }
+					})/*.find('input[name="editarForm:editTipo"]').iCheck({
+                		checkboxClass: 'icheckbox_square-blue',
+                		radioClass: 'iradio_square-blue'
+            		}).on('ifChanged', function(e) {
+                		var field = $(this).attr('name');
+                		$('#editarForm').bootstrapValidator('revalidateField', field);
+           			});*/
+				};
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<h:body>
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Configuración de cuenta en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-5 col-lg-4">
+						<h2 class="content-title">Configurar cuenta <br/> <small></small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Configurar cuenta <br/> <small></small></h3>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+						<h:panelGroup rendered="#{settingsAccountBean.estado==1}">
+							<div class="alert alert-success" role="alert">
+								<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+								<p class="text-center">#{settingsAccountBean.mensaje}</p>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{settingsAccountBean.estado==2}">
+							<div class="alert alert-danger" role="alert">
+								<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+								<p class="text-center">#{settingsAccountBean.mensaje}</p>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<!-- ACA VA EL FORM DE LA TABLA PRINCIPAL -->
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="active"><a href="#editData" role="tab" data-toggle="tab">Editar datos</a></li>
+							<li><a href="#editPass" role="tab" data-toggle="tab">Editar contraseña</a></li>
+							<li><a href="#deleteAccount" role="tab" data-toggle="tab">Eliminar cuenta</a></li>
+						</ul>
+
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="editData">
+								<br/>
+								<h:form class="form-horizontal" id="editDataForm" role="form" enctype="multipart/form-data">
+									<div class="form-group">
+									    <label for="nombreEdit" class="col-md-3 control-label">Nombre</label>
+									    <div class="col-md-9">
+									    	<h:inputText class="form-control" id="nombreEdit" value="#{settingsAccountBean.nombreEdit}" pt:placeholder="Ingrese su nombre"/>
+									    </div>
+									  </div>
+  									<div class="form-group">
+									    <label for="correoEdit" class="col-md-3 control-label">Correo electrónico</label>
+									    <div class="col-md-9">
+									    	<h:inputText class="form-control" id="correoEdit" value="#{settingsAccountBean.correoEdit}" pt:placeholder="Ingrese su correo electrónico"/>
+									    </div>
+  									</div>
+  									<div class="form-group">
+									    <label for="inputAvatar" class="col-md-3 control-label">Foto de perfil</label>
+									    <div class="col-md-9">
+									    	<h:inputFile id="inputAvatar" value="#{settingsAccountBean.part}"/>
+									    	<p class="help-block">Se admite una imagen PNG o JPEG con un tamaño maximo de 512KB.</p>
+									    </div>
+									</div>
+									<h:commandButton class="btn btn-primary pull-right" action="#{settingsAccountBean.editAccount}" value="Guardar cambios"/>
+								</h:form>									
+							</div>
+							<div class="tab-pane fade" id="editPass">
+								<br/>
+								<h:form class="form-horizontal" id="editPassForm" role="form">
+									<div class="form-group">
+									    <label for="contraseñaActual" class="col-md-3 control-label">Actual contraseña</label>
+									    <div class="col-md-9">
+									    	<h:inputSecret class="form-control" id="contraseñaActual" value="#{settingsAccountBean.contraseñaActual}" pt:placeholder="Ingrese su actual contraseña"/>
+									    </div>
+									  </div>
+  									<div class="form-group">
+									    <label for="contraseñaEdit" class="col-md-3 control-label">Nueva contraseña</label>
+									    <div class="col-md-9">
+									    	<h:inputSecret class="form-control" id="contraseñaEdit" value="#{settingsAccountBean.contraseñaEdit}" pt:placeholder="Ingrese su nueva contraseña"/>
+									    </div>
+  									</div>
+  									<div class="form-group">
+									    <label for="contraseñaConf" class="col-md-3 control-label">Confirme su nueva contraseña</label>
+									    <div class="col-md-9">
+									    	<h:inputSecret class="form-control" id="contraseñaConf" pt:placeholder="Confirme su nueva contraseña"/>
+									    </div>
+  									</div>
+  									<h:commandButton class="btn btn-primary pull-right" action="#{settingsAccountBean.editContraseña}" value="Guardar cambios"/>
+								</h:form>
+							</div>
+							<div class="tab-pane fade" id="deleteAccount">
+								<br/>
+								<div class="alert alert-warning" role="alert">
+									<p class="text-center"><strong>Advertencia:</strong> Eliminar su cuenta implica que <strong>se eliminarán sus datos personales</strong> y <strong>ya no volverá a tener acceso</strong> con esta cuenta.</p>
+									<p class="text-center">¿Está seguro de eliminar su cuenta?</p>
+								</div>
+								<button class="btn btn-danger pull-right" data-toggle="modal" data-target="#modalDeleteAccount">
+									Si, quiero eliminar mi cuenta.
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalDeleteAccount" tabindex="-1" role="dialog" aria-labelledby="myModalDelete" aria-hidden="true">
+  				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Eliminar cuenta</h4>
+						</div>
+						<h:form class="form-horizontal" id="deleteAccountForm" role="form">
+							<div class="modal-body">
+								<div class="alert alert-warning" role="alert">
+	        						<p class="text-center">Como modo de seguridad <strong>usted debe ingresar su contraseña</strong> antes de eliminar su cuenta.</p>
+	        					</div>
+	        					<div class="form-group">
+								    <label for="contraseñaConf" class="col-md-3 control-label">Contraseña</label>
+								    <div class="col-md-9">
+								    	<h:inputSecret class="form-control" id="contraseñaConf" value="#{settingsAccountBean.contraseñaConf}" pt:placeholder="Ingrese su contraseña"/>
+								    </div>
+								</div>
+	      					</div>
+		      				<div class="modal-footer">
+			        			<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+			        			<h:commandButton class="btn btn-danger" action="#{settingsAccountBean.deleteAccount}" value="Eliminar cuenta"/>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				$(document).ready(function() {
+					$('#editDataForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'editDataForm:nombreEdit': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        max: 30,
+				                        message: 'El nombre debe ser mínimo de 5 carácteres y máximo de 30 carácteres'
+				                    }
+				            	}
+				            },
+				            'editDataForm:correoEdit': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				            	}
+				            },
+				            'editDataForm:inputAvatar': {
+				            	validators: {
+				            		file: {
+						            	extension: 'jpeg,jpg,png',
+				                        type: 'image/jpeg,image/png',
+				                        maxSize: 512 * 1024,   // 1 MB
+				                        message: 'La imagen no es válida'
+				            		}
+			                    }
+                        	}
+				        }
+					});
+					$('#editPassForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'editPassForm:contraseñaActual': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña actual es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña actual debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            },
+				            'editPassForm:contraseñaEdit': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña nueva es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña nueva debe ser mínimo de 5 carácteres'
+				                    },
+				                    identical: {
+				                        field: 'editPassForm:contraseñaConf',
+				                        message: 'La nueva no coincide'
+				                    }
+				            	}
+				            },
+				            'editPassForm:contraseñaConf': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña nueva es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña nueva debe ser mínimo de 5 carácteres'
+				                    },
+				                    identical: {
+				                        field: 'editPassForm:contraseñaEdit',
+				                        message: 'La contraseña nueva no coincide'
+				                    }
+				            	}
+				            }
+				        }
+					});
+					$('#deleteAccountForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				            'deleteAccountForm:contraseñaConf': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            }
+				        }
+					});
+				});
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

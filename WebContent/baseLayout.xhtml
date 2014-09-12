@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<f:metadata>
+		<f:event listener="#{indexBean.isAdmin}" type="preRenderView" />
+	</f:metadata>
+
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			---Nombre sección--- en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-5 col-lg-4">
+						<h2 class="content-title">Título <br/> <small>Título secundario</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Título <br/> <small>Título secundario</small></h3>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+						<h:panelGroup id="mensaje">
+							<!-- ACA VAN LOS MENSAJES DE EXITO Y ERRORES -->
+						</h:panelGroup>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<!-- ACA VA EL FORM DE LA TABLA PRINCIPAL -->
+					</div>
+				</div>
+			</div>
+
+			<!-- ACA VAN LOS MODAL Y SUS RESPECTIVOS FORMULARIOS -->
+
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				// ACA VAN LOS VALIDADORES
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

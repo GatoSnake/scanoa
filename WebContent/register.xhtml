@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<h:body>
+	<ui:composition template="templates/mainTemplate.xhtml">
+
+		<ui:define name="style">
+			<style>
+				.index-header{
+					display: none;
+				}
+			</style>
+		</ui:define>
+
+		<ui:define name="title">
+			Regístrate en SCANOA
+		</ui:define>
+
+		<ui:define name="header">
+			<div class="header-navbar">
+				<nav class="navbar2 navbar-edit" role="navigation">
+					<div class="container">
+				    <!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-index-navbar-collapse">
+						        <span class="sr-only">Toggle navigation</span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+				      		</button>
+				      	<a class="navbar-brand" href="index.xhtml">
+				      		<img src="resources/img/logo_uv_white.png" height="56" width="120" class="img-responsive logo-white-header" alt="Image"/>
+				      	</a>
+				    	</div>
+
+				    	<!-- Collect the nav links, forms, and other content for toggling -->
+				    	<div class="collapse navbar-collapse" id="bs-index-navbar-collapse">
+							<button class="btn2 btn-edit navbar-btn navbar-right pull-right" data-toggle="modal" data-target="#modal-login"><strong>Iniciar sesión</strong></button>
+				    	</div><!-- /.navbar-collapse -->
+				  	</div><!-- /.container-fluid -->
+				</nav>
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3 col-lg-offset-3">
+							<h1 class="text-center">Registrate ahora!</h1>
+							<br/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="contentLogin">
+				<div class="container">
+					<br/>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+							<h:panelGroup rendered="#{indexBean.error!=null}">
+								<div class="alert alert-danger text-center" role="alert">Lo siento, pero la dirección del correo electrónico ingresado ya está vinculado a una cuenta. <strong>Por favor, ingrese otra dirección de correo electrónico</strong>.</div>
+								<br/>
+							</h:panelGroup>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+							<h:form class="form-horizontal" id="registerForm" role="form">
+						        <div class="form-group">
+						        	<label for="correoRegister" class="col-sm-3 control-label">Correo electrónico</label>
+						        	<div class="col-sm-9">
+										<h:inputText class="form-control" id="correoRegister" value="#{indexBean.correoRegister}" pt:placeholder="Ingrese un correo electrónico"/>
+									</div>
+						        </div>
+						        <div class="form-group">
+						        	<label for="nombreRegister" class="col-sm-3 control-label">Nombre</label>
+						        	<div class="col-sm-9">
+										<h:inputText class="form-control" id="nombreRegister" value="#{indexBean.nombreRegister}" pt:placeholder="Ingrese su nombre"/>
+									</div>
+						        </div>
+						        <div class="form-group">
+									<label for="contraseñaRegister" class="col-sm-3 control-label">Contraseña</label>
+									<div class="col-sm-9">
+										<h:inputSecret class="form-control" id="contraseñaRegister" value="#{indexBean.contraseñaRegister}" pt:placeholder="Ingrese una contraseña"/>
+									</div>
+								</div>
+								<div class="form-group">
+						        	<h:commandButton class="btn btn-primary pull-right-form" action="#{indexBean.registerUser}" value="Registrar"/>
+						    	</div>
+		      				</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--modal login-->
+			<div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="myModalLogin" aria-hidden="true">
+					<div class="modal-dialog">
+					<div class="modal-content">
+  						<div class="modal-header">
+    						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+    						<h4 class="modal-title" id="myModalLabel">Ingrese sus datos</h4>
+  						</div>
+  						<h:form class="form-horizontal" id="loginForm" role="form">
+							<div class="modal-body">
+						        <div class="form-group">
+						        	<label for="" class="col-sm-3 control-label">Correo electrónico</label>
+						        	<div class="col-sm-9">
+										<h:inputText class="form-control" id="correoLogin" value="#{indexBean.correoLogin}" pt:placeholder="Ingrese su correo electrónico"/>
+									</div>
+						        </div>
+						        <div class="form-group">
+									<label for="" class="col-sm-3 control-label">Contraseña</label>
+									<div class="col-sm-9">
+										<h:inputSecret class="form-control" id="contraseñaLogin" value="#{indexBean.contraseñaLogin}" pt:placeholder="Ingrese su contraseña"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										<a href="recoveryAccount.xhtml" class="pull-right">¿Se te ha olvidado la contraseña?</a>
+									</div>
+								</div>
+							</div>
+	      					<div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						        <h:commandButton class="btn btn-primary" action="#{indexBean.loginUser}" value="Entrar"/>
+	      					</div>
+	      				</h:form>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				$(document).ready(function() {
+					$('#loginForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'loginForm:correoLogin': {
+				                validators: {
+				                    notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				                }
+				            },
+				            'loginForm:contraseñaLogin': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            }
+				        }
+					});
+					$('#registerForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'registerForm:correoRegister': {
+				                validators: {
+				                    notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				                }
+				            },
+				            'registerForm:nombreRegister': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        max: 30,
+				                        message: 'El nombre debe ser mínimo de 5 carácteres y máximo de 30 carácteres'
+				                    }
+				            	}
+				            },
+				            'registerForm:contraseñaRegister': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña debe ser mínimo de 5 carácteres'
+				                    }
+				            	}
+				            }
+				        }
+					});
+				});
+			</script>
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+</html>

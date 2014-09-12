@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Buscar OAs en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-12 col-lg-12">
+						<h2 class="content-title">Búsqueda de objetos de aprendizaje <br/> <small>Sección de consultas de OAs</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Búsqueda de objetos de aprendizaje <br/> <small>Sección de consultas de OAs</small></h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+						<div class="row">
+							<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+								<h5><strong>Buscar por categoría</strong></h5>
+							</div>
+							<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+								<h:panelGroup id="opcionTree">
+									<h:commandButton value="Borrar selección" class="btn btn-primary btn-sm pull-right" action="#{searchOAsBean.resetTree}" disabled="#{searchOAsBean.buttonDisableTree}" onclick="showLoading();">
+				                		<f:ajax render="opcionTree :treeTopicsForm :tableOAsForm"/>
+						    		</h:commandButton>
+						    	</h:panelGroup>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<h:form id="treeTopicsForm">
+									<p:tree value="#{searchOAsBean.root}" var="topic" selectionMode="single" selection="#{searchOAsBean.selectedNode}">
+										<p:ajax event="select" update=":opcionTree,:tableOAsForm" listener="#{searchOAsBean.onSearchSelected}" />
+										<p:ajax event="unselect" update=":opcionTree,:tableOAsForm" listener="#{searchOAsBean.onSearchUnselected}" />
+										<p:treeNode>
+											<h:outputText value="#{topic.label}" />
+										</p:treeNode>
+									</p:tree>
+								</h:form>								
+							</div>							
+						</div>
+					</div>
+					<div class="col-xs-12 hidden-lg">
+            			<div class="spacer"/>
+            		</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<h:form id="searchTituloForm" class="form-horizontal" role="form">
+									<label for="searchTitulo" class="col-lg-3 control-label">Buscar por título</label>
+									<div class="col-lg-9">
+										<h:inputText class="form-control" id="searchTitulo" value="#{searchOAsBean.inputTitulo}" pt:placeholder="Ingrese un título">
+											<f:ajax event="keyup" render=":tableOAsForm" listener="#{searchOAsBean.searchByTitulo}"/>
+										</h:inputText>
+									</div>
+								</h:form>
+							</div>
+						</div>
+						<div class="col-xs-12">
+	            			<div class="spacer"/>
+	            		</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<h4 class="text-center"><strong>Resultado de la búsqueda</strong></h4>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<h:form id="tableOAsForm" class="form-horizontal">
+									<p:dataTable id="tableOAs" selectionMode="single" selection="#{searchOAsBean.selectedOA}" var="oa" value="#{searchOAsBean.oas}" rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" filteredValue="#{searchOAsBean.filteredOAs}" emptyMessage="No se han encontrado objetos de aprendizaje" widgetVar="oasTable" rowKey="#{oa.id}">
+										<f:facet name="header">
+								            <p:outputPanel>
+								            	<div class="row">
+								            		<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+								            			<div class="spacer"/>
+								            		</div>
+								            		<div class="col-xs-12">
+											                <h:commandButton value="Ver" class="btn btn-success btn-xs button-tablePrim headerOption-datatable pull-right" onclick="openModalVer();" disabled="#{searchOAsBean.buttonDisable}">
+													    		<f:ajax render=":verForm"/>
+													    	</h:commandButton>
+								            		</div>
+								            	</div>
+								            </p:outputPanel>
+								        </f:facet>
+							        	<p:ajax event="rowSelect" listener="#{searchOAsBean.onRowSelect}" update=":tableOAsForm"/>
+									    <p:column headerText="Título" sortBy="#{oa.titulo}" filterBy="#{oa.titulo}" filterMatchMode="contains" filterStyle="display:none">
+									        <h:outputText value="#{oa.titulo}" />
+									    </p:column>
+									 
+									    <p:column styleClass="columnOption-datatable">
+									    	<div data-toggle="modal" data-target="#modalVer" class="modal-trigger tag-center">
+										    	<h:commandButton value="Ver" class="btn btn-success btn-xs button-tablePrim">
+										    		<f:ajax render=":verForm"/>
+										    		<f:setPropertyActionListener value="#{oa}" target="#{searchOAsBean.selectedOA}" />
+										    	</h:commandButton>
+									    	</div>
+									    </p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ACA VAN LOS MODAL Y SUS RESPECTIVOS FORMULARIOS -->
+			<div class="modal fade" id="modalVer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Detalles del objeto de aprendizaje</h4>
+      					</div>
+      					<h:form id="verForm" role="form">
+		      				<div class="modal-body">
+	      						<div class="row">
+	      							<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+	      								<p><strong>Ingresado por: </strong>#{searchOAsBean.selectedOA.usuario}</p>
+	      							</div>
+	      							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+	      								<a href="#{searchOAsBean.selectedOA.url}" type="button" class="btn btn-info btn-sm pull-right" role="button" target="_blank">Ir al OA</a>
+	      							</div>
+	      						</div>
+			      				<div class="row">
+			      					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			      						<p><strong>Título: </strong>#{searchOAsBean.selectedOA.titulo}</p>
+			      						<h:panelGroup rendered="#{!empty searchOAsBean.selectedOA.descripcion}">
+			      							<p><strong>Descripción: </strong>#{searchOAsBean.selectedOA.descripcion}</p>
+			      						</h:panelGroup>
+			      						<h:panelGroup rendered="#{!empty searchOAsBean.selectedOA.rankTopicos}">
+				      						<p><strong>Clasificado en (orden ascendente): </strong>
+					      						<ui:repeat var="topic" value="#{searchOAsBean.selectedOA.rankTopicos}">
+													<h:outputText value=", #{topic.label}"/>
+												</ui:repeat>
+											</p>
+										</h:panelGroup>
+			      					</div>
+			      				</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				// ACA VAN LOS VALIDADORES
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<f:metadata>
+		<f:event listener="#{indexBean.isAdmin}" type="preRenderView" />
+	</f:metadata>
+
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Gestión de tópico en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-5 col-lg-4">
+						<h2 class="content-title">Gestión de tópicos <br/> <small>Sección de Administración</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Gestión de tópicos <br/> <small>Sección de Administración</small></h3>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+						<h:panelGroup id="mensaje">
+							<!-- ACA VAN LOS MENSAJES DE EXITO Y ERRORES -->
+							<h:panelGroup rendered="#{topicManagerBean.estadoExito==1}">
+								<div class="alert alert-success" role="alert">
+									<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+									<h:panelGroup rendered="#{topicManagerBean.mensajesExito[0]}">
+										<p class="text-center">Se ha creado satisfactoriamente el tópico.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{topicManagerBean.mensajesExito[1]}">
+										<p class="text-center">Se han guardado los cambios satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{topicManagerBean.mensajesExito[2]}">
+										<p class="text-center">Se ha actualizado el nombre satisfactoriamente.</p>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{topicManagerBean.mensajesExito[3]}">
+										<p class="text-center">Se ha eliminado satisfactoriamente el tópico.</p>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{topicManagerBean.estadoError==1}">
+								<div class="alert alert-danger" role="alert">
+									<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+									<p>Se han producido los siguientes errores:</p>
+									<li>
+										<h:panelGroup rendered="#{topicManagerBean.mensajesError[0]}">
+											<ul>El identificador ingresado ya está vinculado a un tópico</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{topicManagerBean.mensajesError[1]}">
+											<ul>Error en el proceso de guardado del identificador</ul>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{topicManagerBean.mensajesError[2]}">
+											<ul>Error en el proceso de guardado del nombre</ul>
+										</h:panelGroup>
+									</li>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h:form id="tableTopicsForm">
+						    <p:treeTable id="tableTopics" selectionMode="single" selection="#{topicManagerBean.selectedNode}" value="#{topicManagerBean.root}" var="topic" emptyMessage="No hay tópicos ingresados en el sistema">
+						        <f:facet name="header">
+									<p:outputPanel>
+										<div class="row">
+											<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								                <h:commandButton value="Borrar selección" class="btn btn-primary btn-xs button-tablePrim2 pull-left" action="#{topicManagerBean.resetTable}" disabled="#{topicManagerBean.buttonDisable}" onclick="showLoading();">
+								                	<f:ajax render="tableTopicsForm"/>
+										    	</h:commandButton>
+						            		</div>
+						            		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+								                <div data-toggle="modal" data-target="#modalCrear" class="modal-trigger2 pull-right">
+									                <h:commandButton value="Crear tópico" class="btn btn-primary btn-xs button-tablePrim2" action="#{topicManagerBean.setValuesAdd}">
+											    		<f:ajax render=":crearForm" onevent="validatorAdd"/>
+											    	</h:commandButton>
+											    </div>
+						            		</div>
+						            	</div>
+						            	<div class="row">
+						            		<div class="col-xs-12">
+						            			<div class="spacer"/>
+						            		</div>
+						            		<div class="col-xs-4 col-sm-2 col-sm-offset-3 text-center">
+											    <h:commandButton value="Ver" class="btn btn-success btn-xs button-tablePrim" onclick="openModalVer();" disabled="#{topicManagerBean.buttonDisable}">
+										    		<f:ajax render=":verForm"/>
+										    	</h:commandButton>
+						            		</div>
+						            		<div class="col-xs-4 col-sm-2 text-center">
+												<h:commandButton value="Editar" class="btn btn-warning btn-xs button-tablePrim" action="#{topicManagerBean.setValuesEdit}" onclick="openModalEditar();" disabled="#{topicManagerBean.buttonDisable}">
+										    		<f:ajax render=":editarForm" onevent="validatorEdit"/>
+										    	</h:commandButton>
+										    </div>
+										    <div class="col-xs-4 col-sm-2 text-center">
+										    	<h:commandButton value="Eliminar" class="btn btn-danger btn-xs button-tablePrim" action="#{topicManagerBean.setValuesEdit}" onclick="openModalEliminar();" disabled="#{topicManagerBean.buttonDisable}">
+										    		<f:ajax render=":eliminarForm"/>
+										    	</h:commandButton>
+										    </div>
+						            	</div>
+						            </p:outputPanel>
+						        </f:facet>
+						        <p:ajax event="select" listener="#{topicManagerBean.onNodeSelect}" update=":tableTopicsForm"/>
+						        <p:ajax event="unselect" listener="#{topicManagerBean.onNodeUnselect}" update=":tableTopicsForm"/>
+						        <p:column headerText="Tópico" sortBy="#{topic.label}">
+						            <h:outputText value="#{topic.label}" />
+						        </p:column>
+
+						        <p:column headerText="N° de OAs" sortBy="#{topic.cantOAs}" styleClass="columnOption-datatable">
+						            <h:outputText value="#{topic.cantOAs}" />
+						        </p:column>
+						    </p:treeTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalCrear" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Crear tópico</h4>
+      					</div>
+      					<h:form class="form-horizontal" id="crearForm" role="form">
+	      					<div class="modal-body">
+	      						<div class="row">
+		      						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		      							<h:panelGroup rendered="#{topicManagerBean.selectedTopic!=null}">
+			      							<div class="alert alert-info" role="alert">		      								
+		      									<p class="text-center">Usted esta agregando el nuevo tópico en <strong>#{topicManagerBean.selectedTopic.label}</strong></p>
+			      							</div>
+		      							</h:panelGroup>
+		      						</div>
+		      					</div>
+	      						<div class="form-group">
+									<label for="addTopico" class="col-sm-3 control-label">Identificador</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="addTopico" value="#{topicManagerBean.topicoTMB}" pt:placeholder="Ingrese el identificador del tópico">
+											<f:ajax event="keyup" render="text" onevent="validateAddForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="addLabel" class="col-sm-3 control-label">Nombre</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="addLabel" value="#{topicManagerBean.labelTMB}" pt:placeholder="Ingrese el nombre del tópico">
+											<f:ajax event="keyup" render="text" onevent="validateAddForm"/>
+										</h:inputText>
+									</div>
+								</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-primary" action="#{topicManagerBean.addTopic}" value="Crear tópico" onclick="showLoading();">
+		        					<f:ajax execute="@form" event="action" render=":tableTopicsForm :mensaje crearForm" onevent="closeModalCrear"/>
+		        				</h:commandButton>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalVer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Detalles del tópico</h4>
+      					</div>
+      					<h:form id="verForm" role="form">
+		      				<div class="modal-body">
+	      						<div class="row">
+	      							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	      								<p><strong>Identificador: </strong>#{topicManagerBean.selectedTopic.topico}</p>
+	      								<p><strong>Nombre: </strong>#{topicManagerBean.selectedTopic.label}</p>
+	      								<p><strong>N° de OAs clasificados: </strong>#{topicManagerBean.selectedTopic.cantOAs}</p>
+	      							</div>
+	      						</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Editar tópico</h4>
+      					</div>
+      					<h:form class="form-horizontal" id="editarForm" role="form">
+	      					<div class="modal-body">
+	      						<div class="form-group">
+									<label for="editTopico" class="col-sm-3 control-label">Identificador</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="editTopico" value="#{topicManagerBean.topicoTMB}" pt:placeholder="Ingrese el identificador del tópico">
+										 	<f:ajax event="keyup" render="text" onevent="validateEditForm"/>
+										</h:inputText>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="editLabel" class="col-sm-3 control-label">Nombre</label>
+								    <div class="col-sm-9">
+										<h:inputText class="form-control" id="editLabel" value="#{topicManagerBean.labelTMB}" pt:placeholder="Ingrese el nombre del tópico">
+											<f:ajax event="keyup" render="text" onevent="validateEditForm"/>
+										</h:inputText>
+									</div>
+								</div>
+		      				</div>
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-primary" action="#{topicManagerBean.editTopic}" value="Guardar cambios" onclick="showLoading();">
+									<f:ajax execute="@form" event="action" render=":tableTopicsForm :mensaje editarForm" onevent="closeModalEditar"/>
+		        				</h:commandButton>
+		      				</div>
+		      			</h:form>
+    				</div>
+  				</div>
+			</div>
+
+			<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">Eliminar tópico</h4>
+      					</div>
+      					<h:form id="eliminarForm" role="form"> 					
+	      					<div class="modal-body">
+	      						<div class="row">
+		      						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		      							<div class="alert alert-warning" role="alert">
+		      								<p class="text-center"><strong>Advertencia:</strong> Eliminar este tópico implica que <strong>se eliminarán todos sus subtópicos y sus relaciones hacia los objetos de aprendizajes</strong>.</p>
+											<p class="text-center">¿Está seguro de eliminar el tópico <strong>#{topicManagerBean.labelTMB}</strong>?</p>
+		      							</div>
+		      						</div>
+	      						</div>
+		      				</div>	      				
+		      				<div class="modal-footer">
+		        				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        				<h:commandButton class="btn btn-danger" action="#{topicManagerBean.deleteTopic}" value="Si, estoy seguro" onclick="showLoading();">
+		        					<f:ajax execute="@form" event="action" render=":tableTopicsForm :mensaje eliminarForm" onevent="closeModalEliminar"/>
+		        				</h:commandButton>
+		      				</div>
+	      				</h:form>
+    				</div>
+  				</div>
+			</div>
+
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				function validatorAdd(data){
+					console.log("validatorAdd");
+					$('#crearForm').bootstrapValidator({
+						excluded: [':hidden', ':not(:visible)'],
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'crearForm:addTopico': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El identificador es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 3,
+				                        message: 'El identificador debe ser mínimo de 3 carácteres'
+				                    },
+				                    regexp: {
+                        				regexp: /^[a-zA-Z0-9]+$/i,
+                        				message: 'El identificador debe tener solo carácteres alfanuméricos'
+                    				}
+				            	}
+				            },
+				            'crearForm:addLabel': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 3,
+				                        message: 'El nombre debe ser mínimo de 3 carácteres'
+				                    }
+				            	}
+				            }
+				        }
+					})
+				};
+				function validatorEdit(data){
+					console.log("validatorEdit");
+					$('#editarForm').bootstrapValidator({
+						excluded: [':hidden', ':not(:visible)'],
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'editarForm:editTopico': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El identificador es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 3,
+				                        message: 'El identificador debe ser mínimo de 3 carácteres'
+				                    },
+				                    regexp: {
+                        				regexp: /^[a-zA-Z0-9]+$/i,
+                        				message: 'El identificador debe tener solo carácteres alfanuméricos'
+                    				}
+				            	}
+				            },
+				            'editarForm:editLabel': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'El nombre es requerido'
+				                    },
+				                    stringLength: {
+				                        min: 3,
+				                        message: 'El nombre debe ser mínimo de 3 carácteres'
+				                    }
+				            	}
+				            }
+				        }
+					})
+				};
+			</script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

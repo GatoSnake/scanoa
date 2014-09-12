@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+	<ui:composition template="templates/mainTemplate.xhtml">
+		<f:metadata>
+			<f:viewParam name="code" value="#{recoveryAccountBean.code}" />
+			<f:viewParam name="email" value="#{recoveryAccountBean.correoRAB}" />
+			<f:event listener="#{recoveryAccountBean.init}" type="preRenderView" />
+			<f:attribute name="code" value="#{recoveryAccountBean.code}" />
+			<f:attribute name="email" value="#{recoveryAccountBean.correoRAB}" />
+		</f:metadata>
+
+		<ui:define name="title">
+			Recuperar cuenta en SCANOA
+		</ui:define>
+
+		<ui:define name="style">
+			<style>
+				.index-header{
+					display: none;
+				}
+			</style>
+		</ui:define>
+
+		<ui:define name="header">
+			<div class="header-navbar">
+				<nav class="navbar2 navbar-edit" role="navigation">
+					<div class="container">
+				    <!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-index-navbar-collapse">
+						        <span class="sr-only">Toggle navigation</span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+						        <span class="icon-bar"></span>
+				      		</button>
+				      	<a class="navbar-brand" href="index.xhtml">
+				      		<img src="resources/img/logo_uv_white.png" height="56" width="120" class="img-responsive logo-white-header" alt="Image"/>
+				      	</a>
+				    	</div>
+
+				    	<!-- Collect the nav links, forms, and other content for toggling -->
+				    	<div class="collapse navbar-collapse" id="bs-index-navbar-collapse">
+				    		<a href="register.xhtml" class="btn2 btn-edit navbar-btn navbar-right pull-right" role="button"><strong>Registrate!</strong></a>
+				    	</div>
+				  	</div>
+				</nav>
+			</div>
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="contentLogin">
+				<div class="container">
+					<div class="row">
+						<div class="hidden-xs hidden-sm col-md-12 col-lg-12">
+							<h2 class="content-title text-center">Recuperación de cuenta <br/> <small></small></h2>
+							<br/>
+						</div>
+						<div class="col-xs-12 hidden-md hidden-lg">
+							<h3 class="content-title">Recuperación de cuenta <br/> <small></small></h3>
+						</div>
+					</div>
+					<div class="row">
+						<h:panelGroup id="mensaje">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+								<h:panelGroup rendered="#{recoveryAccountBean.mensaje==1}">
+									<div class="alert alert-danger text-center" role="alert">
+										<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+										El correo electrónico ingresado no está vinculado a ninguna cuenta.
+									</div>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{recoveryAccountBean.mensaje==2}">
+									<div class="alert alert-success text-center" role="alert">
+										<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+										Se ha enviado el mail para la recuperación de su cuenta.
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div>
+					<h:panelGroup rendered="#{recoveryAccountBean.showRecovery==0}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+								<div class="alert alert-info text-center" role="alert">Se enviará un mail a su correo electrónico para confirmar la recuperación de la cuenta.</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+								<h:form class="form-horizontal" id="recForm" role="form">
+							        <div class="form-group">
+							        	<label for="" class="col-sm-3 control-label">Correo electrónico</label>
+							        	<div class="col-sm-9">
+											<h:inputText class="form-control" id="correoRec" value="#{recoveryAccountBean.correoRAB}" pt:placeholder="Ingrese su correo electrónico"/>
+										</div>
+							        </div>
+									<div class="row">
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<a class="btn btn-default" href="index.xhtml" role="button">Cancelar</a>
+								        	<h:commandButton class="btn btn-primary pull-right" action="#{recoveryAccountBean.sendMail}" value="Enviar mail" onclick="showLoading();">
+								        		<f:ajax execute="@form" event="action" render=":mensaje recForm"/>
+								       		</h:commandButton>
+										</div>
+							    	</div>
+			      				</h:form>
+							</div>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{recoveryAccountBean.showRecovery==1}">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3">
+								<h:form class="form-horizontal" id="restPassForm" role="form">
+  									<div class="form-group">
+									    <label for="contraseñaEdit" class="col-md-3 control-label">Nueva contraseña</label>
+									    <div class="col-md-9">
+									    	<h:inputSecret class="form-control" id="contraseñaEdit" value="#{recoveryAccountBean.newPass}" pt:placeholder="Ingrese su nueva contraseña"/>
+									    </div>
+  									</div>
+  									<div class="form-group">
+									    <label for="contraseñaConf" class="col-md-3 control-label">Confirme su nueva contraseña</label>
+									    <div class="col-md-9">
+									    	<h:inputSecret class="form-control" id="contraseñaConf" pt:placeholder="Confirme su nueva contraseña"/>
+									    </div>
+  									</div>
+  									<h:commandButton class="btn btn-primary pull-right" action="#{recoveryAccountBean.restablecerPass}" value="Guardar cambios"/>
+								</h:form>
+							</div>
+						</div>						
+					</h:panelGroup>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<br/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+
+		<ui:define name="script">
+			<script>
+				$(document).ready(function() {
+					$('#recForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	'recForm:correoRec': {
+				                validators: {
+				                    notEmpty: {
+				                        message: 'La dirección del correo electrónico es requerida'
+				                    },
+				                    emailAddress: {
+				                        message: 'La dirección del correo electrónico no es válida'
+				                    }
+				                }
+				            }
+				        }
+					});
+					$('#restPassForm').bootstrapValidator({
+						message: 'Este valor no es válido',
+						feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				            'restPassForm:contraseñaEdit': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña nueva es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña nueva debe ser mínimo de 5 carácteres'
+				                    },
+				                    identical: {
+				                        field: 'editPassForm:contraseñaConf',
+				                        message: 'La nueva no coincide'
+				                    }
+				            	}
+				            },
+				            'restPassForm:contraseñaConf': {
+				            	validators: {
+				            		notEmpty: {
+				                        message: 'La contraseña nueva es requerida'
+				                    },
+				                    stringLength: {
+				                        min: 5,
+				                        message: 'La contraseña nueva debe ser mínimo de 5 carácteres'
+				                    },
+				                    identical: {
+				                        field: 'restPassForm:contraseñaEdit',
+				                        message: 'La contraseña nueva no coincide'
+				                    }
+				            	}
+				            }
+				        }
+					});
+				});
+				function showLoading(){
+					console.log("showLoading");
+					document.getElementsByClassName("loading")[0].style.display="inherit";
+				};
+			</script>
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+</html>

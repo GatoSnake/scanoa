@@ -1,0 +1,167 @@
+.ui-widget {
+  font-family: "Roboto";
+  font-size: 14px;
+}
+/******* DataTable *******/
+.ui-widget-header {
+  color: #424242;
+  text-shadow: none;
+  background: none;
+  border: none;
+}
+.ui-state-default {
+  box-shadow: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #e3e3e3;
+}
+.ui-datatable .ui-datatable-header, .ui-datatable .ui-datatable-footer {
+  text-align: left;
+}
+.ui-datatable thead th, .ui-sortable-column {
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #e3e3e3;
+}
+.ui-sortable-column:hover {
+  background: #e0e0e0;
+  text-shadow: none;
+}
+.ui-state-hover {
+  box-shadow: none;
+}
+.ui-widget-content {
+  background: transparent;
+  border: 1px solid transparent;
+}
+.ui-datatable-odd {
+  background: #e8eaf6;
+  border: 1px solid transparent;
+}
+.ui-datatable-even:hover, .ui-datatable-odd:hover {
+  background: #c5cae9;
+  border: 1px solid transparent;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+  background: #757575;
+  text-shadow: none;
+  border: 1px solid transparent;
+}
+.ui-paginator-top .ui-paginator-current {
+  display: none;
+}
+.ui-paginator-bottom .ui-paginator-first, .ui-paginator-bottom .ui-paginator-prev, .ui-paginator-bottom .ui-paginator-pages, .ui-paginator-bottom .ui-paginator-next, .ui-paginator-bottom .ui-paginator-last {
+  display: none;
+}
+.ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev {
+  border: 1px solid #e3e3e3;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: normal;
+}
+.ui-paginator .ui-paginator-page:hover, .ui-paginator .ui-paginator-next:hover, .ui-paginator .ui-paginator-last:hover, .ui-paginator .ui-paginator-first:hover, .ui-paginator .ui-paginator-prev:hover {
+  background: #e0e0e0;
+  text-shadow: none;
+  box-shadow: none;
+}
+.ui-paginator .ui-state-active {
+  background: #e0e0e0;
+  font-weight: normal;
+  text-shadow: none;
+  box-shadow: none;
+}
+.ui-radiobutton {
+  margin: 7px 4px 0px 15px;
+}
+.ui-selectoneradio label {
+  margin-top: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+.ui-radiobutton-box > .ui-icon {
+  margin: -1px 0px;
+  cursor: pointer;
+}
+.columnTipo-datatable {
+  width: 12%;
+}
+.columnOption-datatable {
+  width: 18%;
+}
+.headerOption-datatable {
+  display: none;
+}
+@media (max-width: 767px) {
+  .columnOption-datatable {
+    display: none;
+  }
+  .headerOption-datatable {
+    display: inline;
+  }
+}
+@media (max-width: 1199px) {
+  .columnTipo-datatable {
+    display: none;
+  }
+}
+/******* TreeTable *******/
+.ui-treetable-selectable-node:hover {
+  background: #e3e3e3;
+  color: black;
+}
+.ui-treetable .ui-treetable-toggler {
+  margin-right: 3px;
+  border-radius: 0px;
+  width: 26px;
+  height: 23px;
+  margin-left: -8px;
+}
+.ui-icon-triangle-1-e {
+  background-position: -27px -14px;
+}
+.ui-icon-triangle-1-s {
+  background-position: -59px -13px;
+}
+.ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield {
+  box-shadow: none;
+  border: 1px solid #ccc;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus{
+  box-shadow: none;
+  border: 1px solid rgba(82,168,236,.8);
+  /*box-shadow: 0 0 5px #85b2cb;*/
+  box-shadow: 0 0 8px rgba(82,168,236,.6) ;
+}
+/******* Tree *******/
+.ui-tree {
+  position: relative;
+  /*max-height: 150px;*/
+  width: 100%;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.ui-tree .ui-tree-container {
+  position: relative;
+  /*max-height: 150px;*/
+}
+@media (min-width: 768px) {
+  .ui-tree {
+    /*max-height: 300px;*/
+  }
+  .ui-tree .ui-tree-container {
+    /*max-height: 300px;*/
+  } 
+}
+@media (min-width: 992px) {
+  .ui-tree {
+    /*max-height: 425px;*/
+  }
+  .ui-tree .ui-tree-container {
+    /*max-height: 425px;*/
+  } 
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="templates/mainTemplate2.xhtml">
+
+		<ui:define name="title">
+			Mi perfil en SCANOA
+		</ui:define>
+
+		<ui:define name="section">
+			<div class="container-fluid content-edit">
+				<div class="row">
+					<div class="hidden-xs hidden-sm col-md-12 col-lg-12">
+						<h2 class="content-title">Mi perfil <br/> <small>Datos personales de la cuenta</small></h2>
+
+					</div>
+					<div class="col-xs-12 hidden-md hidden-lg">
+						<h3 class="content-title">Mi perfil <br/> <small>Datos personales de la cuenta</small></h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-5 hidden-xs">
+	                    <p class="text-center avatar-circle-profile pull-right">
+	                        <h:graphicImage value="#{path_img}" height="150" width="150" class="img-responsive img-circle" alt="avatar" data-toggle="tooltip" data-placement="left" title="#{nombre}"/>
+	                    </p>
+	                </div>
+	                <div class="col-xs-10 hidden-sm hidden-md hidden-lg col-xs-offset-1">
+	                    <p class="text-center avatar-circle">
+	                        <h:graphicImage value="#{path_img}" height="150" width="150" class="img-responsive img-circle" alt="avatar" data-toggle="tooltip" data-placement="left" title="#{nombre}"/>
+	                    </p>
+	                </div>
+					<div class="col-sm-7 hidden-xs">
+						<h4><strong>#{nombre}</strong></h4>
+						<p>#{correo}</p>
+						<p><strong>Fecha de registro: </strong>#{fecha_registro}</p>
+						<p><strong>Tipo de cuenta: </strong><h:outputText rendered="#{tipo==1}" value="Administrador"/><h:outputText rendered="#{tipo==2}" value="Miembro"/></p>
+					</div>
+					<div class="col-xs-10 hidden-sm hidden-md hidden-lg col-xs-offset-1">
+						<h4><strong>#{nombre}</strong></h4>
+						<p>#{correo}</p>
+						<p><strong>Fecha de registro: </strong>#{fecha_registro}</p>
+						<p><strong>Tipo de cuenta: </strong><h:outputText rendered="#{tipo==1}" value="Administrador"/><h:outputText rendered="#{tipo==2}" value="Miembro"/></p>
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:body>
+	<script>
+		window.lastWidt = 0;
+		$(window).on("load resize",function(e) {
+			var path = $(this);
+			var contW = path.width();
+			var contH = path.height();
+			var currentContentHeight = document.getElementsByClassName("navbar2")[0].offsetHeight;
+			if(contW >= 751){
+				var current = contH-currentContentHeight;
+				document.getElementsByClassName("active")[0].style.left="200px";
+				document.getElementsByClassName("sidebar-nav")[0].style.height=current+"px";
+				document.getElementById("sidebar-wrapper").style.marginTop=currentContentHeight+"px";
+				document.getElementsByClassName("background-sidebar")[0].style.visibility="hidden";
+				document.getElementsByClassName("background-sidebar")[0].style.opacity="0";
+			}else{
+				if(lastWidt!=contW){
+					$("#menu-toggle-bar-1").removeClass("bar-toogle-1");
+					$("#menu-toggle-bar-3").removeClass("bar-toogle-3");
+					document.getElementsByClassName("active")[0].style.left="-200px";	
+					document.getElementsByClassName("background-sidebar")[0].style.visibility="hidden";
+					document.getElementsByClassName("background-sidebar")[0].style.opacity="0";				
+				}
+				var current = contH-currentContentHeight;
+				document.getElementsByClassName("sidebar-nav")[0].style.height=current+"px";
+				document.getElementById("sidebar-wrapper").style.marginTop=currentContentHeight+"px";
+			}
+			lastWidt = contW;
+		});
+		$(document).ready(function() {
+			$('#dropdown-user .dropdown-menu').on({
+				"click":function(e){
+			      e.stopPropagation();
+			    }
+			});
+			$('.dropdown').on('show.bs.dropdown', function(e){
+			    $(this).find('.dropdown-menu').first().stop(true, true).slideDown(300);
+			});
+			$('.dropdown').on('hide.bs.dropdown', function(e){
+				$(this).find('.dropdown-menu').first().stop(true, true).slideUp(300);
+			});
+			$(".background-sidebar").click(function(e) {
+				$("#menu-toggle-bar-1").removeClass("bar-toogle-1");
+				$("#menu-toggle-bar-3").removeClass("bar-toogle-3");
+				document.getElementsByClassName("active")[0].style.left="-200px";
+				document.getElementsByClassName("background-sidebar")[0].style.visibility="hidden";
+				document.getElementsByClassName("background-sidebar")[0].style.opacity="0";
+			});
+			$("#menu-toggle").click(function(e) {
+				e.preventDefault();
+				var elem = document.getElementById("sidebar-wrapper");
+				left = window.getComputedStyle(elem,null).getPropertyValue("left");
+				if(left == "200px"){
+					$("#menu-toggle-bar-1").removeClass("bar-toogle-1");
+					$("#menu-toggle-bar-3").removeClass("bar-toogle-3");
+					document.getElementsByClassName("active")[0].style.left="-200px";
+					document.getElementsByClassName("background-sidebar")[0].style.visibility="hidden";
+					document.getElementsByClassName("background-sidebar")[0].style.opacity="0";
+				}
+				else if(left == "-200px"){
+					$("#menu-toggle-bar-1").addClass("bar-toogle-1");
+					$("#menu-toggle-bar-3").addClass("bar-toogle-3");
+					document.getElementsByClassName("active")[0].style.left="200px";
+					document.getElementsByClassName("background-sidebar")[0].style.visibility="visible";
+					document.getElementsByClassName("background-sidebar")[0].style.opacity="1";
+				}
+			});
+			$('#modalCrear').on('shown.bs.modal', function (e) {
+				console.log("shown modalCrear");
+				var bootstrapValidator = $('#crearForm').data('bootstrapValidator');
+				bootstrapValidator.validate();
+			})
+			$('#modalEditar').on('shown.bs.modal', function (e) {
+				console.log("shown modalEditar");
+				var bootstrapValidator = $('#editarForm').data('bootstrapValidator');
+				bootstrapValidator.validate();
+			});
+		});
+		function openModalVer(){$('#modalVer').modal('show');};
+		function openModalCrear(){$('#modalCrear').modal('show');};
+		function openModalEditar(){$('#modalEditar').modal('show');};
+		function openModalEliminar(){$('#modalEliminar').modal('show');};
+		function closeModalVer(){$('#modalVer').modal('hide');};
+		function closeModalCrear(){$('#modalCrear').modal('hide');};
+		function closeModalEditar(){$('#modalEditar').modal('hide');};
+		function closeModalEliminar(){$('#modalEliminar').modal('hide');};
+		function validateAddForm(){
+			console.log("validateAddForm");
+			var bootstrapValidator = $('#crearForm').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			if(bootstrapValidator.isValid()){
+				bootstrapValidator.disableSubmitButtons(false);
+			}else{
+				bootstrapValidator.disableSubmitButtons(true);
+			}
+		};
+		function validateEditForm(){
+			console.log("validateEditForm");
+			var bootstrapValidator = $('#editarForm').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			if(bootstrapValidator.isValid()){
+				bootstrapValidator.disableSubmitButtons(false);
+			}else{
+				bootstrapValidator.disableSubmitButtons(true);
+			}
+		};
+		function showLoading(){
+			console.log("showLoading");
+			document.getElementsByClassName("loading")[0].style.display="inherit";
+		};
+	</script>
+</h:body>
+</html>
